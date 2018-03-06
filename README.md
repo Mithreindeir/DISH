@@ -1,5 +1,6 @@
 # DISH
-The Dang Interactive Shell. Library for creating psuedo-commandline programs. 
+The Dang Interactive Shell. 
+C99 Library for creating psuedo-commandline programs. 
 
 ### Features
 * Fast and Simple
