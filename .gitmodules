@@ -1,0 +1,3 @@
+[submodule "ascii"]
+	path = ascii
+	url = https://github.com/mithreindeir/ascii-renderer.git
