@@ -4,9 +4,10 @@ The Dang Interactive Shell. Library for creating psuedo-commandline programs.
 ### Features
 * Fast and Simple
 * Command history
-* Syntax highlighting interface
+* Config files for making custom syntax highlighting
 * Easy API using callback functions.
 * Customizable prompt
+* Pattern matching
 
 
 Example program
