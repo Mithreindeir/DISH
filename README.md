@@ -12,7 +12,7 @@ C99 Library for creating psuedo-commandline programs.
 
 
 Example program
-````
+````C
 #include <stdio.h>
 #include <stdlib.h>
 #include "dshell.h"
