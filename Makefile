@@ -7,16 +7,17 @@ UNAME_S := $(shell uname -s)
 
 ifeq ($(UNAME_S), Linux)
 	CXXFLAGS = -ggdb3 -std=c99 -pedantic -Wall -Wextra
+	LFLAGS = -shared -fPIC -o
 endif
 
 .c.o:
-	$(CXX) $(CXXFLAGS) -c -o $@ $<
+	$(CXX) $(CXXFLAGS) -fPIC -c -o $@ $<
 
 all: $(EXE)
 	@echo Build complete.
 
 $(EXE): $(OBJS)
-	$(CXX) -o $(EXE) $(OBJS) $(CXXFLAGS) -lc
+	$(CXX) $(LFLAGS) $(EXE) $(OBJS) $(CXXFLAGS) -lc
 
 clean:
 		rm $(EXE) $(OBJS)
