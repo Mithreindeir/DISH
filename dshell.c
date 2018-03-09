@@ -63,7 +63,7 @@ char *dshell_update(dshell *shell)
 		writef("%s not found\r\n", args[0]);
 	} else {
 		if (cmd->callback){
-			cmd->callback(num_arg, args, cmd->context);
+			cmd->callback(shell->buffer, num_arg, args, cmd->context);
 		}
 	}
 	for (int i = 0; i < num_arg; i++)
@@ -85,5 +85,10 @@ void dshell_clear(dshell *shell)
 
 void dshell_render(dshell *shell)
 {
+	shell->buffer->pairs = shell->conf->pairs;
+	shell->buffer->num_pairs = shell->conf->num_pairs;
+
 	text_buffer_render(shell->buffer);
+	text_buffer_clear(shell->buffer);
+	writef("\x1b[%d;0m", 0);
 }

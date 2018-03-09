@@ -13,13 +13,14 @@
  * '[a-z]' matches lowercase a-z
  * '{a-z}' matches lowercase a-z or nothing
  * '$' matches any amount of the previous token
+ * '^' saves the current length of the string
  *
  * Example:
  * '[A-z]$' matches any alphabetical string with no whitespace or other tokens.
  * */
 
-int dmatch_text(const char *text, const char *match);
-int dmatch_cl(const char *text, char **operators, int num_oper);
+int dmatch_text(const char *text, const char *match, char const***save,int *slen);
+int dmatch_cl(const char *text, char **operators,int num_oper,char const***save,int*slen);
 char **dmatch_lex(const char *match, int *num_oper);
 int dmatch_expr(char *oper, char c);
 

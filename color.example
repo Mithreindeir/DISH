@@ -1,0 +1,15 @@
+^//{A-z }$^\r\n 				= blue
+[!A-z]^int^[!A-z] 				= green
+[!A-z]^void^[!A-z] 				= green
+[!A-z]^struct^[!A-z] 				= yellow
+[!A-z]^char^[!A-z] 				= green
+[!A-z]^for^[!A-z] 				= yellow
+[!A-z]^while^[!A-z] 				= yellow
+[!A-z]^return^[!A-z] 				= yellow
+[!A-z]^break^[!A-z] 				= yellow
+[!A-z]^switch^[!A-z] 				= yellow
+[!A-z]^do^[!A-z] 				= yellow
+[!A-z]^const^[!A-z] 				= yellow
+[!A-z]^[0-9]^ 					= blue
+^[A-z]$^( 	 				= cyan
+^"*"^		 				= magenta

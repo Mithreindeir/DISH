@@ -5,8 +5,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include "ascii/term.h"
+#include "ascii/draw.h"
 
-typedef int(*dhash_callback)(int argc, char ** argv, void *ctx);
+typedef
+int(*dhash_callback)(struct text_buffer *text,int argc,char **argv,void *ctx);
+
 /*Dish hash table for storing commands*/
 struct dhash_entry {
 	char * name;
