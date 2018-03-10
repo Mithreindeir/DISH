@@ -20,6 +20,7 @@ typedef struct dshell {
 	int num_history;
 
 	struct dconfig *conf;
+	int tmpx, tmpy;
 } dshell;
 
 dshell *dshell_init();

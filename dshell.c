@@ -4,6 +4,7 @@ dshell *dshell_init()
 {
 	dshell *shell = malloc(sizeof(dshell));
 
+	shell->tmpx = 0, shell->tmpy = 0;
 	shell->original = get_term();
 	shell->buffer = text_buffer_init();
 	shell->table = dhash_table_init(50);
@@ -11,6 +12,7 @@ dshell *dshell_init()
 	shell->history = NULL;
 	shell->num_history = 0;
 	set_term(raw_term());
+	get_cursor(&shell->tmpx, &shell->tmpy);
 
 	return shell;
 }
@@ -39,6 +41,7 @@ void dshell_loadconf(dshell *shell, const char *file)
 
 char *dshell_update(dshell *shell)
 {
+	set_cursor(shell->tmpx, shell->tmpy);
 	if (shell->conf && shell->conf->prompt) {
 		writef("\r\n%s", *shell->conf->prompt);
 	} else {
@@ -69,6 +72,8 @@ char *dshell_update(dshell *shell)
 	for (int i = 0; i < num_arg; i++)
 		free(args[i]);
 	free(args);
+	get_cursor(&shell->tmpx, &shell->tmpy);
+
 	return line;
 }
 
@@ -88,7 +93,9 @@ void dshell_render(dshell *shell)
 	shell->buffer->pairs = shell->conf->pairs;
 	shell->buffer->num_pairs = shell->conf->num_pairs;
 
+	set_cursor(shell->tmpx, shell->tmpy);
 	text_buffer_render(shell->buffer);
 	text_buffer_clear(shell->buffer);
 	writef("\x1b[%d;0m", 0);
+	get_cursor(&shell->tmpx, &shell->tmpy);
 }
