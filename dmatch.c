@@ -3,20 +3,17 @@
 int dmatch_text(const char *text, const char *match, char const***save,int*slen)
 {
 	int num_oper = 0;
-	char **operators = dmatch_lex(match, &num_oper);
-	if (!operators) return 0;
+	char operators[MAX_OPER][MAX_OPER_LEN];
+	memset(operators, 0, MAX_OPER*MAX_OPER_LEN);
+	dmatch_lex(match, operators, &num_oper);
 
 	int len = dmatch_cl(text, operators, num_oper,save,slen);
 
-	for (int i = 0; i < num_oper; i++) {
-		free(operators[i]);
-	}
-	free(operators);
 	return len;
 }
-int dmatch_cl(const char * text,char **operators,int num_oper,char const*** save,int*slen)
+int dmatch_cl(const char * text,char operators[MAX_OPER][MAX_OPER_LEN],int num_oper,char const*** save,int*slen)
 {
-	int mlen = strlen(text), len = 0, asterisk = 0, kleen = 0;
+	int len = 0, asterisk = 0, kleen = 0;
 	int sliter = *slen;
 	const char *kstart = NULL;
 	for (int i = 0; i < num_oper; i++) {
@@ -34,7 +31,7 @@ int dmatch_cl(const char * text,char **operators,int num_oper,char const*** save
 			*slen=sl;
 			continue;
 		}
-		if (len==mlen) {
+		if (!text[len]) {
 			//Checks if all other operators are optional
 			int optional = 1;
 			while (i < num_oper) {
@@ -66,7 +63,7 @@ int dmatch_cl(const char * text,char **operators,int num_oper,char const*** save
 			}
 			if (l && !l2) {
 				len+=l;
-				if (last && len==mlen) {
+				if (last && !text[len]) {
 					for (int j=sliter; j<(*slen);j++) {
 						//(*save)[j]+=(text+len)-kstart;
 					}
@@ -111,7 +108,7 @@ int dmatch_cl(const char * text,char **operators,int num_oper,char const*** save
 			sliter = *slen;
 			kstart = text + len;
 			if ((i+1)==num_oper)
-				return mlen;
+				return len + strlen(text+len);
 		} else if (rmatch == -2 && i != 0) {
 			kleen = 1;
 			sliter = *slen;
@@ -126,47 +123,37 @@ int dmatch_cl(const char * text,char **operators,int num_oper,char const*** save
 	return len;
 }
 
-char **dmatch_lex(const char *match, int *num_oper)
+void dmatch_lex(const char *match, char operators[MAX_OPER][MAX_OPER_LEN], int *num_oper)
 {
-	char ** operators = NULL;
-	int num_o = 0;
 
+	int num_o = 0;
 	char *cur = NULL;
 	int clen = 0;
 	while (*match) {
 		clen = 1;
 		if (*match=='^')
 			clen = 1;
-		if (*match=='$')
+		else if (*match=='$')
 			clen = 1;
-		if (*match=='*')
+		else if (*match=='*')
 			clen = 1;
-		if (*match=='?')
+		else if (*match=='?')
 			clen = 1;
-		if (*match == '[') {
+		else if (*match == '[') {
 			while (match[clen] && match[clen] != ']') clen++;
 			clen++;
 		}
-		if (*match == '{') {
+		else if (*match == '{') {
 			while (match[clen] && match[clen] != '}') clen++;
 			clen++;
 		}
-		cur = malloc(clen+1);
-		strncpy(cur, match, clen);
-		cur[clen] = 0;
-
 		num_o++;
-		if (!operators) {
-			operators = malloc(sizeof(char*));
-		} else {
-			operators = realloc(operators, num_o * sizeof(char*));
-		}
-		operators[num_o-1] = cur;
+		memcpy(operators[num_o-1], match, clen);
+		operators[num_o-1][clen] = 0;
 		match += clen;
 	}
 
 	*num_oper = num_o;
-	return operators;
 }
 
 int dmatch_expr(char *oper, char c)

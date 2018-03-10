@@ -5,6 +5,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define MAX_OPER_LEN 16
+#define MAX_OPER 32
+
 /* Basic Pattern Matching functionality.
  * Operators:
  * '*' matches anything
@@ -20,8 +23,8 @@
  * */
 
 int dmatch_text(const char *text, const char *match, char const***save,int *slen);
-int dmatch_cl(const char *text, char **operators,int num_oper,char const***save,int*slen);
-char **dmatch_lex(const char *match, int *num_oper);
+int dmatch_cl(const char *text, char operators[MAX_OPER][MAX_OPER_LEN],int num_oper,char const***save,int*slen);
+void dmatch_lex(const char *match, char operators[MAX_OPER][MAX_OPER_LEN], int *num_oper);
 int dmatch_expr(char *oper, char c);
 
 #endif

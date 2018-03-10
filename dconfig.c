@@ -62,7 +62,7 @@ struct color_pair parser_color(const char * string, int * blen)
 	char const**saved = NULL;
 	int slen = 0;
 	int len = dmatch_text(string, "*^{\t }$={\t }$^[A-z]$",&saved,&slen)+1;
-	if (len == 0)
+	if (len == 1)
 		return *blen=-1, p;
 	*blen += len;
 	len--;
