@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "ascii/term.h"
 
 #define MAX_OPER_LEN 16
 #define MAX_OPER 32

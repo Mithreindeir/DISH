@@ -147,6 +147,17 @@ void dmatch_lex(const char *match, char operators[MAX_OPER][MAX_OPER_LEN], int *
 			while (match[clen] && match[clen] != '}') clen++;
 			clen++;
 		}
+		if (clen >= MAX_OPER_LEN) {
+			writef("Operator with len > %d not allowed\r\n", MAX_OPER_LEN);
+			writef("Near token %10s\r\n", match);
+			match+= clen;
+			continue;
+		}
+		if ((num_o+1) >= MAX_OPER) {
+			writef("No more than %d operators allowed\r\n", MAX_OPER);
+			writef("Near token %10s\r\n", match);
+			break;
+		}
 		num_o++;
 		memcpy(operators[num_o-1], match, clen);
 		operators[num_o-1][clen] = 0;
