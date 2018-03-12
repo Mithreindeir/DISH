@@ -130,7 +130,7 @@ void dmatch_lex(const char *match, char operators[MAX_OPER][MAX_OPER_LEN], int *
 	char *cur = NULL;
 	int clen = 0;
 	while (*match) {
-		clen = 1;
+		clen = 0;
 		if (*match=='^')
 			clen = 1;
 		else if (*match=='$')
@@ -158,6 +158,7 @@ void dmatch_lex(const char *match, char operators[MAX_OPER][MAX_OPER_LEN], int *
 			writef("Near token %10s\r\n", match);
 			break;
 		}
+		if (!clen) clen = 1;
 		num_o++;
 		memcpy(operators[num_o-1], match, clen);
 		operators[num_o-1][clen] = 0;
@@ -172,23 +173,26 @@ int dmatch_expr(char *oper, char c)
 	if (*oper=='$') return -2;
 	if (*oper=='*') return -1;
 	if (*oper=='?') return 1;
-	if (*oper==c) return 1;
 
 	int not = 0;
 	if (*oper=='[') {
 		oper++;
-		while (*oper && *oper != ']') {
+		while (*oper != '[' && *oper && *oper != ']') {
 			if (*oper=='!') {
 				not = !not;
 				oper++;
 				continue;
 			}
 			int range = *(oper+1)=='-';
-			if (!range && *oper==c) return !not;
+			if (!range && *oper==c){
+				return !not;
+			}
 			else if (range) {
 				char mrange = *(oper+2);
-				if (c>=*oper&&c<=mrange)
+				if (c>=*oper&&c<=mrange) {
 					return !not;
+				}
+				oper++;
 				oper++;
 			}
 			oper++;
@@ -198,23 +202,26 @@ int dmatch_expr(char *oper, char c)
 	not = 0;
 	if (*oper=='{') {
 		oper++;
-		while (*oper && *oper != '}') {
+		while (*oper != '{' && *oper && *oper != '}') {
 			if (*oper=='!') {
 				not = !not;
 				oper++;
 				continue;
 			}
 			int range = *(oper+1)=='-';
-			if (!range && *oper==c) return !not;
-			else if (range) {
+			if (!range && *oper==c) {
+				return !not;
+			} else if (range) {
 				char mrange = *(oper+2);
-				if (c>=*oper&&c<=mrange)
+				if (c>=*oper&&c<=mrange) {
 					return !not;
+				}
 				oper++;
 			}
 			oper++;
 		}
 		return not;
 	}
+	if (*oper==c) return 1;
 	return 0;
 }
