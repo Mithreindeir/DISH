@@ -7,7 +7,7 @@ char * dish_readline(char ** history, int num_history)
 	int iter=0, miter=0, x=0, y=0;
 	get_cursor(&x, &y);
 	int arrow_key = 0;
-	int hiter = num_history-1;
+	int hiter = num_history;
 	char c = 1;
 
 	while (c && c != EOF && c != '\n' && c != '\r') {
@@ -24,7 +24,7 @@ char * dish_readline(char ** history, int num_history)
 			miter = len, iter = len;
 		}
 		if (arrow_key && c=='B' && num_history > 0) {
-			hiter < num_history-1 ? ++hiter : hiter;
+			hiter=hiter < num_history-1 ? ++hiter : num_history-1;
 			memset(buf, 0, 256);
 			int len = strlen(history[hiter]);
 			memcpy(buf, history[hiter], len);
