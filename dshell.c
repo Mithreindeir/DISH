@@ -47,7 +47,7 @@ char *dshell_update(dshell *shell)
 	} else {
 		write_str("\r\n>");
 	}
-	char * line = dish_readline(shell->history, shell->num_history);
+	char * line = dish_readline(shell->history, shell->num_history, shell->original);
 	if (line) {
 		shell->num_history++;
 		if (!shell->history) {

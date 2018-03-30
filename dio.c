@@ -1,6 +1,6 @@
 #include "dio.h"
 
-char * dish_readline(char ** history, int num_history)
+char * dish_readline(char ** history, int num_history, struct termios saved)
 {
 	char buf[256];
 	memset(buf, 0, 256);
@@ -11,6 +11,18 @@ char * dish_readline(char ** history, int num_history)
 	char c = 1;
 
 	while (c && c != EOF && c != '\n' && c != '\r') {
+		if (iscntrl(c)) {
+			if (c==3) {
+				set_term(saved);
+				exit(1);
+			} else if (c==26) {
+				struct termios tmp = get_term();
+				set_term(saved);
+				kill(getpid(),SIGTSTP);
+				get_cursor(&x, &y);
+				set_term(tmp);
+			}
+		}
 		c = key_process(&arrow_key);
 		if (arrow_key && c=='C')
 			iter < miter ? ++iter : iter;
